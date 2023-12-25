@@ -1,10 +1,8 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { ConfigService } from './../shared/config/config.service';
 import { JwtPayload } from './auth/jwt-payload.model';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { UserDto } from './dto/user.dto';

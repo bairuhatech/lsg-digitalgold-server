@@ -26,4 +26,8 @@ export class CreateUserDto {
     @ApiProperty()
     @IsOptional()
     readonly authToken: string;
+    
+    @ApiProperty()
+    @IsOptional()
+    readonly role: number;
 }

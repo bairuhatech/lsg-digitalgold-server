@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateKycDto } from './dto/create-kyc.dto';
-// import { Kyc } from './kyc.entity';
 import { Kyc } from './kyc.entity';
+import { KycDto } from './dto/kyc.dto';
+
 @Injectable()
 export class KycService {
   constructor(
@@ -9,12 +10,12 @@ export class KycService {
     private readonly kycRepository: typeof Kyc,
   ) {}
 
-  // async findAll() {
-  //   const posts = await this.kycRepository.findAll<Kyc>({
-  //     include: [User],
-  //   });
-  //   return posts.map((kyc) => new KycDto(kyc));
-  // }
+  async findAll() {
+    const Allkyc = await this.kycRepository.findAll<Kyc>({
+      include: [Kyc],
+    });
+    return Allkyc.map((kyc) => new KycDto(kyc));
+  }
 
   // async findOne(id: number) {
   //   const kyc = await this.kycRepository.findByPk<Kyc>(id, {

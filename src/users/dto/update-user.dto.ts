@@ -22,4 +22,9 @@ export class UpdateUserDto {
     @IsOptional()
     @IsString()
     readonly email?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    readonly role?: number;
 }

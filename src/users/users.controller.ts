@@ -40,7 +40,7 @@ export class UsersController {
     return this.usersService.login(userLoginRequestDto);
   }
 
-  @Get()
+  @Get('/getUsers')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: [UserDto] })

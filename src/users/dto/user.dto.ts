@@ -18,11 +18,15 @@ export class UserDto {
   @ApiProperty()
   readonly email: string;
 
+  @ApiProperty()
+  readonly role: number;
+
   constructor(user: User) {
     this.id = user.id;
     this.name = user.name;
     this.phoneNumber = user.phoneNumber;
     this.city = user.city;
     this.email = user.email;
+    this.role = user.role;
   }
 }
