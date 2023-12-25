@@ -8,7 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
   setupSwagger(app);
-  await app.listen(8012);
+  await app.listen(process.env.PORT);
 }
 
 bootstrap();
