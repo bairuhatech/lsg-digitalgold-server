@@ -17,15 +17,15 @@ export class KycService {
     return Allkyc.map((kyc) => new KycDto(kyc));
   }
 
-  // async findOne(id: number) {
-  //   const kyc = await this.kycRepository.findByPk<Kyc>(id, {
-  //     include: [User],
-  //   });
-  //   if (!kyc) {
-  //     throw new HttpException('No post found', HttpStatus.NOT_FOUND);
-  //   }
-  //   return new KycDto(kyc);
-  // }
+  async findOne(userId: number) {
+    const kyc = await this.kycRepository.findByPk<Kyc>(userId, {
+      include: [Kyc],
+    });
+    if (!kyc) {
+      throw new HttpException('No post found', HttpStatus.NOT_FOUND);
+    }
+    return new KycDto(kyc);
+  }
 
   async create(userId: string, createKycDto: CreateKycDto) {
     try {

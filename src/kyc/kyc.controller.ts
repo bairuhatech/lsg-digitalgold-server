@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   Req,
   UseGuards
@@ -11,6 +13,7 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags
 } from '@nestjs/swagger';
 import { CreateKycDto } from './dto/create-kyc.dto';
@@ -23,18 +26,18 @@ import { KycDto } from './dto/kyc.dto';
 export class KycController {
   constructor(private readonly kycService: KycService) {}
 
-  @Get()
+  @Get('/getKyc')
   @ApiOkResponse({ type: [KycDto] })
   findAll(): Promise<KycDto[]> {
     return this.kycService.findAll();
   }
 
-  // @Get(':id')
-  // @ApiOkResponse({ type: KycDto })
-  // @ApiParam({ name: 'id', required: true })
-  // findOne(@Param('id', new ParseIntPipe()) id: number): Promise<KycDto> {
-  //   return this.kycService.findOne(id);
-  // }
+  @Get('/getKyc/:id')
+  @ApiOkResponse({ type: KycDto })
+  @ApiParam({ name: 'id', required: true })
+  findOne(@Param('id', new ParseIntPipe()) id: number): Promise<KycDto> {
+    return this.kycService.findOne(id);
+  }
 
   @Post('/addKyc')
   @ApiCreatedResponse({ type: KycEntity })
