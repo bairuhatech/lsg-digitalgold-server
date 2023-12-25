@@ -3,7 +3,7 @@ import { Dialect } from 'sequelize/types';
 export const config = {
   database: {
     dialect: 'postgres' as Dialect,
-    host: 'postgres://bairuhapgsqluser:BAiruhamysqluser123_@51.159.104.4:5432/amityforum_db',
+    host: 'postgres://bairuhapgsqluser:BAiruhamysqluser123_@51.159.104.4:5432/ls-digitalgold',
     port: 5432,
     username: 'postgres',
     password: 'BAiruhamysqluser123_',
