@@ -1,11 +1,7 @@
-import { User } from '../users/user.entity';
-import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-kyc.dto';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { CreateKycDto } from './dto/create-kyc.dto';
 // import { Kyc } from './kyc.entity';
-import { KycDto } from './dto/kyc.dto';
-import { UpdatePostDto } from './dto/update-kyc.dto';
 import { Kyc } from './kyc.entity';
-
 @Injectable()
 export class KycService {
   constructor(
@@ -30,13 +26,22 @@ export class KycService {
   //   return new KycDto(kyc);
   // }
 
-  // async create(userId: string, createPostDto: CreatePostDto) {
-  //   const kyc = new Kyc();
-  //   kyc.userId = userId;
-  //   kyc.title = createPostDto.title;
-  //   kyc.content = createPostDto.content;
-  //   return kyc.save();
-  // }
+  async create(userId: string, createKycDto: CreateKycDto) {
+    try {
+      const user = await this.kycRepository.findOne({
+        where: { userId: userId },
+      });
+
+      if (!user) {
+        const kyc = new Kyc();
+        kyc.userId = userId;
+        Object.assign(kyc, createKycDto);
+        return kyc.save();
+      }
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
   // private async getUserPost(id: number, userId: string) {
   //   const post = await this.kycRepository.findByPk<Kyc>(id);

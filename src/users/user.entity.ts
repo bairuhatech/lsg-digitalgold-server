@@ -33,6 +33,9 @@ export class User extends Model<User> {
   @Column({ field: 'email' })
   email: string;
 
+  @Column({ field: 'auth_token' })
+  authToken: string;
+
   @CreatedAt
   @Column({ field: 'created_at' })
   createdAt: Date;

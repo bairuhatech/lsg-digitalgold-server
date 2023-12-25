@@ -1,31 +1,22 @@
 import {
-  Controller,
-  Req,
   Body,
+  Controller,
   Post,
-  UseGuards,
-  Get,
-  Param,
-  ParseIntPipe,
-  Delete,
-  Put,
+  Req,
+  UseGuards
 } from '@nestjs/common';
-import {
-  ApiCreatedResponse,
-  ApiBearerAuth,
-  ApiOkResponse,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
-import { CreatePostDto } from './dto/create-kyc.dto';
-import { KycService } from './kyc.service';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiTags
+} from '@nestjs/swagger';
+import { CreateKycDto } from './dto/create-kyc.dto';
 import { Kyc as KycEntity } from './kyc.entity';
-import { KycDto } from './dto/kyc.dto';
-import { UpdatePostDto } from './dto/update-kyc.dto';
+import { KycService } from './kyc.service';
 
-@Controller('posts')
-@ApiTags('posts')
+@Controller('kyc')
+@ApiTags('kyc')
 export class KycController {
   constructor(private readonly kycService: KycService) {}
 
@@ -42,16 +33,16 @@ export class KycController {
   //   return this.kycService.findOne(id);
   // }
 
-  // @Post()
-  // @ApiCreatedResponse({ type: KycEntity })
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
-  // create(
-  //   @Body() createPostDto: CreatePostDto,
-  //   @Req() request,
-  // ): Promise<KycEntity> {
-  //   return this.kycService.create(request.user.id, createPostDto);
-  // }
+  @Post('/addKyc')
+  @ApiCreatedResponse({ type: KycEntity })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  create(
+    @Body() createKycDto: CreateKycDto,
+    @Req() request,
+  ): Promise<KycEntity> {
+    return this.kycService.create(request.user.id, createKycDto);
+  }
 
   // @Put(':id')
   // @ApiOkResponse({ type: KycEntity })

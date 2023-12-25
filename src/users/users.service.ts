@@ -38,18 +38,13 @@ export class UsersService {
     return new UserDto(user);
   }
 
-  async getUserByEmail(email: string) {
+  async getUserPhoneNumber(phoneNumber: string) {
     return await this.usersRepository.findOne<User>({
-      where: { email },
+      where: { phoneNumber },
     });
   }
 
-  async create(
-    createUserDto: CreateUserDto,
-  ): Promise<UserLoginResponseDto> {
-    console.log("------------------------------------------------createUserDtocreateUserDto----------------------------------------")
-    console.log(createUserDto)
-    console.log("--------------------------------------createUserDtocreateUserDto--------------------------------------------------")
+  async create(createUserDto: CreateUserDto): Promise<UserLoginResponseDto> {
     const existingUser = await this.usersRepository.findOne({
       where: { phoneNumber: createUserDto.phoneNumber },
     });
@@ -59,22 +54,20 @@ export class UsersService {
         const user: any = new User();
         user.name = createUserDto.name;
         user.phoneNumber = createUserDto.phoneNumber;
-        user.city = createUserDto.city;
-        user.email = createUserDto.email.trim().toLowerCase();
+        if (createUserDto.email) {
+          user.email = createUserDto.email.trim().toLowerCase();
+        }
+        if (createUserDto.city) {
+          user.city = createUserDto.city;
+        }
 
         const userData = await user.save();
-
         const token = await this.signToken(userData);
+        userData.authToken = token;
+        await userData.save();
         return new UserLoginResponseDto(userData, token);
       } catch (err) {
         if (err) {
-          console.log(
-            '===============================================err==================================================',
-          );
-          console.log(err);
-          console.log(
-            '===============================================err==================================================',
-          );
           throw new HttpException(
             `User with phoneNumber '${err.errors[0].value}' already exists`,
             HttpStatus.CONFLICT,
@@ -83,8 +76,9 @@ export class UsersService {
         throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
       }
     } else {
-      //   return { message: 'User already exists' };
       console.log('User already exists');
+      const existingToken = existingUser.authToken;
+      return new UserLoginResponseDto(existingUser, existingToken);
     }
   }
 
@@ -92,7 +86,7 @@ export class UsersService {
     const name = userLoginRequestDto.name;
     const phoneNumber = userLoginRequestDto.phoneNumber;
 
-    const user = await this.getUserByEmail(phoneNumber);
+    const user = await this.getUserPhoneNumber(phoneNumber);
     if (!user) {
       throw new HttpException(
         'Invalid name or phoneNumber.',
@@ -139,7 +133,7 @@ export class UsersService {
 
   async signToken(user: User) {
     const payload: JwtPayload = {
-      email: user.email,
+      phoneNumber: user.phoneNumber,
     };
 
     return sign(payload, this.jwtPrivateKey, {});
