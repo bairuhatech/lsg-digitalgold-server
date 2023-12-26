@@ -7,6 +7,7 @@ import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,9 +21,13 @@ export class UsersService {
     this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
   }
 
-  async findAll() {
-    const users = await this.usersRepository.findAll<User>();
-    return users.map((user) => new UserDto(user));
+  async findAll(pagination: PaginationDto): Promise<User[]> {
+    const { page = 1, pageSize = 10 } = pagination;
+    const offset = (page - 1) * pageSize;
+    return await this.usersRepository.findAll({
+      offset,
+      limit: pageSize,
+    });
   }
 
   async getUser(id: string) {

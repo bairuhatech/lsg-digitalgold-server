@@ -9,6 +9,8 @@ import {
   Req,
   UseGuards,
   Put,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -17,6 +19,7 @@ import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -42,10 +45,10 @@ export class UsersController {
 
   @Get('/getUsers')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: [UserDto] })
-  findAll(): Promise<UserDto[]> {
-    return this.usersService.findAll();
+  findAll(@Query() paginationDto: PaginationDto): Promise<UserDto[]> {
+    return this.usersService.findAll(paginationDto);
   }
 
   @Get('me')
