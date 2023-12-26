@@ -58,6 +58,7 @@ export class UsersService {
         if (createUserDto.city) {
           user.city = createUserDto.city;
         }
+        user.role = createUserDto.role;
 
         const userData = await user.save();
         const token = await this.signToken(userData);

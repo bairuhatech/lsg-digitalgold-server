@@ -23,7 +23,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('register')
+  @Post('/register')
   @ApiOkResponse({ type: UserLoginResponseDto })
   register(
     @Body() createUserDto: CreateUserDto,
