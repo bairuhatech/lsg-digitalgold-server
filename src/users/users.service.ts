@@ -7,7 +7,7 @@ import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
-import { PaginationDto } from './dto/pagination.dto';
+import { PaginationDto } from '../shared/commondto/pagination.dto';
 
 @Injectable()
 export class UsersService {
