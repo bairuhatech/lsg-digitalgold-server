@@ -42,12 +42,12 @@ export class buyRequestController {
     );
   }
 
-  @Get('/getKyc/:type')
+  @Get('/getRequest/:type')
   @ApiOkResponse({ type: BuyRequestDto })
   findOne(
     @Param('type') type: BuyRequestType,
     @Query() paginationDto: PaginationDto,
   ): Promise<BuyRequestDto> {
-    return this.buyRequestsServices.findType(type,paginationDto);
+    return this.buyRequestsServices.findType(type, paginationDto);
   }
 }
