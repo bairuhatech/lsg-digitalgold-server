@@ -18,8 +18,8 @@ export class KycService {
   }
 
   async findOne(userId: string) {
-    const kyc = await this.kycRepository.findByPk<Kyc>(userId, {
-      include: [Kyc],
+    const kyc = await this.kycRepository.findOne<Kyc>({
+      where: { userId: userId },
     });
     if (!kyc) {
       throw new HttpException('No post found', HttpStatus.NOT_FOUND);

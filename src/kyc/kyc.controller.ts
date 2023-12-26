@@ -35,7 +35,7 @@ export class KycController {
   @Get('/getKyc/:Userid')
   @ApiOkResponse({ type: KycDto })
   @ApiParam({ name: 'Userid', required: true })
-  findOne(@Param('Userid', new ParseIntPipe()) Userid: string): Promise<KycDto> {
+  findOne(@Param('Userid') Userid: string): Promise<KycDto> {
     return this.kycService.findOne(Userid);
   }
 
