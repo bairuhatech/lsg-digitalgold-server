@@ -32,11 +32,11 @@ export class KycController {
     return this.kycService.findAll();
   }
 
-  @Get('/getKyc/:id')
+  @Get('/getKyc/:Userid')
   @ApiOkResponse({ type: KycDto })
-  @ApiParam({ name: 'id', required: true })
-  findOne(@Param('id', new ParseIntPipe()) id: number): Promise<KycDto> {
-    return this.kycService.findOne(id);
+  @ApiParam({ name: 'Userid', required: true })
+  findOne(@Param('Userid', new ParseIntPipe()) Userid: string): Promise<KycDto> {
+    return this.kycService.findOne(Userid);
   }
 
   @Post('/addKyc')

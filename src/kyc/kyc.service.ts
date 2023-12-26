@@ -17,7 +17,7 @@ export class KycService {
     return Allkyc.map((kyc) => new KycDto(kyc));
   }
 
-  async findOne(userId: number) {
+  async findOne(userId: string) {
     const kyc = await this.kycRepository.findByPk<Kyc>(userId, {
       include: [Kyc],
     });
