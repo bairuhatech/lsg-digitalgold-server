@@ -87,6 +87,12 @@ export class KycDto {
   readonly authorisedPersonSecondaryImage: string;
 
   @ApiProperty()
+  readonly reasonreject:string;
+
+  @ApiProperty()
+  readonly isissued:string;
+
+  @ApiProperty()
   readonly createdAt: Date;
 
   @ApiProperty()
@@ -124,6 +130,8 @@ export class KycDto {
     this.vatCertificate = kyc.vatCertificate;
     this.authorisedPersonPrimaryImage = kyc.authorisedPersonPrimaryImage;
     this.authorisedPersonSecondaryImage = kyc.authorisedPersonSecondaryImage;
+    this.reasonreject = kyc.reasonreject;
+    this.isissued = kyc.isissued;
     this.createdAt = kyc.createdAt;
     this.updatedAt = kyc.updatedAt;
     this.deletedAt = kyc.deletedAt;
