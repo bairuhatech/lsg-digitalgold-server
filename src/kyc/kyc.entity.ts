@@ -107,6 +107,12 @@ export class Kyc extends Model<Kyc> {
   @Column({ field: 'authorised_person_secondary_image' })
   authorisedPersonSecondaryImage: string;
 
+  @Column({field: 'isissued'})
+  isissued:string;
+
+  @Column({ field: 'reasonreject'})
+  reasonreject:string;
+
   @CreatedAt
   @Column({ field: 'created_at' })
   createdAt: Date;
@@ -118,6 +124,7 @@ export class Kyc extends Model<Kyc> {
   @DeletedAt
   @Column({ field: 'deleted_at' })
   deletedAt: Date;
+
 
   @BelongsTo(() => User)
   user: User;

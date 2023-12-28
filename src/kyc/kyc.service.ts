@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateKycDto } from './dto/create-kyc.dto';
 import { Kyc } from './kyc.entity';
 import { KycDto } from './dto/kyc.dto';
+import { UpdateKycDto } from './dto/update-kyc.dto'; 
+import { Kyc as KycEntity } from './kyc.entity';
 
 @Injectable()
 export class KycService {
@@ -44,6 +46,34 @@ export class KycService {
     }
   }
 
+  private async getkyc(userId: string) {
+    const kycData = await this.kycRepository.findOne<Kyc>({where : {userId :userId}});
+    if (!kycData) {
+      throw new HttpException('No kyc found', HttpStatus.NOT_FOUND);
+    }
+    return kycData;
+  }
+  
+  async update(UserId: string, updateKycDto: UpdateKycDto): Promise<KycEntity> {
+ try{
+    const update = await this.getkyc(UserId);
+
+    if (updateKycDto.isissued !== undefined){
+      update.isissued = updateKycDto.isissued
+    }
+
+    if(updateKycDto.reasonreject !== undefined){
+      update.reasonreject = updateKycDto.reasonreject
+    }
+    return update.save();
+
+  }catch(err){
+    throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  
+  }
+  
   // private async getUserPost(id: number, userId: string) {
   //   const post = await this.kycRepository.findByPk<Kyc>(id);
   //   if (!post) {

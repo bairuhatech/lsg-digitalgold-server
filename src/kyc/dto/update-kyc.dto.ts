@@ -1,15 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Length, IsString, IsOptional } from 'class-validator';
 
-export class UpdatePostDto {
-    @IsOptional()
-    @ApiProperty()
-    @IsString()
-    @Length(3, 60)
-    readonly title: string;
+export class UpdateKycDto {
+   @ApiProperty()
+   @IsString()
+   readonly isissued:string;
 
-    @IsOptional()
-    @ApiProperty()
-    @IsString()
-    readonly content: string;
+   @ApiProperty()
+   @IsString()
+   readonly reasonreject:string;
 }

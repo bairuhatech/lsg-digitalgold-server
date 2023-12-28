@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
   Req,
   UseGuards
 } from '@nestjs/common';
@@ -20,6 +21,10 @@ import { CreateKycDto } from './dto/create-kyc.dto';
 import { Kyc as KycEntity } from './kyc.entity';
 import { KycService } from './kyc.service';
 import { KycDto } from './dto/kyc.dto';
+import { UpdateKycDto } from './dto/update-kyc.dto';
+import { ParseUUIDPipe } from '@nestjs/common';
+
+
 
 @Controller('kyc')
 @ApiTags('kyc')
@@ -49,6 +54,19 @@ export class KycController {
   ): Promise<KycEntity> {
     return this.kycService.create(request.user.id, createKycDto);
   }
+
+  @Put(':userId')
+  @ApiOkResponse({ type: KycEntity })
+  @ApiParam({ name: 'userId', required: true })
+  //@ApiBearerAuth()
+  // @UseGuards(AuthGuard('jwt'))
+  update(
+    @Param('userId') UserId: string,
+    @Body() UpdateKycDto: UpdateKycDto,
+  ): Promise<KycEntity> {
+    return this.kycService.update(UserId, UpdateKycDto);
+  }
+
 
   // @Put(':id')
   // @ApiOkResponse({ type: KycEntity })
