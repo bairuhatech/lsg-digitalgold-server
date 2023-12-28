@@ -51,12 +51,12 @@ export class UsersController {
     return this.usersService.findAll(paginationDto);
   }
 
-  @Get('me')
+  @Get('/getUserKyc')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: UserDto })
-  async getUser(@Req() request): Promise<UserDto> {
-    return this.usersService.getUser(request.user.id);
+  async getUser(): Promise<any> {
+    return this.usersService.getKycUser();
   }
 
   // @Put('me')

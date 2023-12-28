@@ -8,6 +8,7 @@ import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
 import { PaginationDto } from '../shared/commondto/pagination.dto';
+import { Kyc } from 'src/kyc/kyc.entity';
 
 @Injectable()
 export class UsersService {
@@ -30,15 +31,19 @@ export class UsersService {
     });
   }
 
-  async getUser(id: string) {
-    const user = await this.usersRepository.findByPk<User>(id);
-    if (!user) {
-      throw new HttpException(
-        'User with given id not found',
-        HttpStatus.NOT_FOUND,
-      );
+  async getKycUser() {
+    try {
+      const kycRepo = await Kyc.findAll();
+      const userIds = kycRepo.map((kyc) => kyc.userId);
+      const user = await this.usersRepository.findAll({
+        where: {
+          id: userIds,
+        },
+      });
+      return user;
+    } catch (err) {
+      throw new HttpException('No user found with kyc', HttpStatus.NOT_FOUND);
     }
-    return new UserDto(user);
   }
 
   async getUserPhoneNumber(phoneNumber: string) {
