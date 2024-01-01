@@ -8,11 +8,17 @@ import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
 import { PaginationDto } from '../shared/commondto/pagination.dto';
-import { Kyc } from 'src/kyc/kyc.entity';
+import { Kyc } from '../kyc/kyc.entity';
+import { PageOptionsDto } from '../shared/dto/page-option-dto';
+import { KycService } from '../kyc/kyc.service';
+import { PageDto, PageMetaDto } from '../shared/dto';
+import { KycDto } from 'src/kyc/dto/kyc.dto';
 
 @Injectable()
 export class UsersService {
   private readonly jwtPrivateKey: string;
+  @Inject(KycService)
+  private readonly Kycservice: KycService;
 
   constructor(
     @Inject('UsersRepository')
@@ -22,29 +28,66 @@ export class UsersService {
     this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
   }
 
-  async findAll(pagination: PaginationDto): Promise<User[]> {
-    const { page = 1, pageSize = 10 } = pagination;
-    const offset = (page - 1) * pageSize;
-    return await this.usersRepository.findAll({
-      offset,
-      limit: pageSize,
+  async findAll(pageOptionsDto:PageOptionsDto) {
+    const skip = (pageOptionsDto.page - 1) * pageOptionsDto.take;
+    const userlist = await this.usersRepository.findAndCountAll<User>({
+      limit:Number(pageOptionsDto.take),
+      offset:skip,
+      order: [['updatedAt', pageOptionsDto.order]]
     });
+    const entities = userlist.rows.map((users)=> new UserDto(users));
+    const itemCount = userlist.count;
+
+    const pageMetaDto = new PageMetaDto({ pageOptionsDto, itemCount });
+    return new PageDto(entities, pageMetaDto)
   }
 
-  async getKycUser() {
+  async getKycUser(pageOptionsDto: PageOptionsDto) {
     try {
-      const kycRepo = await Kyc.findAll();
-      const userIds = kycRepo.map((kyc) => kyc.userId);
-      const user = await this.usersRepository.findAll({
+      const skip = (pageOptionsDto.page - 1) * pageOptionsDto.take;
+      const kycList = await Kyc.findAndCountAll({
+        limit: pageOptionsDto.take,
+        offset: skip,
+      });
+  
+      const userIds = kycList.rows.map((kyc) => kyc.userId);
+      const usersList = await this.usersRepository.findAll({
         where: {
           id: userIds,
         },
+        limit: pageOptionsDto.take,
+        offset: skip,
       });
-      return user;
+  
+      const totalCount = kycList.count;
+      const entities = kycList.rows.map((kyc) => new KycDto(kyc));
+      const pageMetaDto = new PageMetaDto({
+        pageOptionsDto,
+        itemCount: totalCount,
+      });
+      return new PageDto(entities, pageMetaDto);
     } catch (err) {
-      throw new HttpException('No user found with kyc', HttpStatus.NOT_FOUND);
+      throw new HttpException('No user found with KYC', HttpStatus.NOT_FOUND);
     }
   }
+  
+  
+  
+
+  // async getKycUser() {
+  //   try {
+  //     const kycRepo = await Kyc.findAll();
+  //     const userIds = kycRepo.map((kyc) => kyc.userId);
+  //     const user = await this.usersRepository.findAll({
+  //       where: {
+  //         id: userIds,
+  //       },
+  //     });
+  //     return user;
+  //   } catch (err) {
+  //     throw new HttpException('No user found with kyc', HttpStatus.NOT_FOUND);
+  //   }
+  // }
 
   async getUserPhoneNumber(phoneNumber: string) {
     return await this.usersRepository.findOne<User>({

@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
   Put,
+  Query,
   Req,
   UseGuards
 } from '@nestjs/common';
@@ -23,6 +25,7 @@ import { KycService } from './kyc.service';
 import { KycDto } from './dto/kyc.dto';
 import { UpdateKycDto } from './dto/update-kyc.dto';
 import { ParseUUIDPipe } from '@nestjs/common';
+import { PageOptionsDto } from '../shared/dto/page-option-dto';
 
 
 
@@ -66,6 +69,16 @@ export class KycController {
   ): Promise<KycEntity> {
     return this.kycService.update(UserId, UpdateKycDto);
   }
+
+
+  @Get('')
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: [KycDto] })
+  @HttpCode(200)
+  getUser(@Query() pageOptionsDto: PageOptionsDto) :any {
+    return this.kycService.getKycUser(pageOptionsDto)
+  }
+
 
 
   // @Put(':id')

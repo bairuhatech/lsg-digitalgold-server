@@ -20,6 +20,7 @@ import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../shared/commondto/pagination.dto';
+import { PageOptionsDto } from '../shared/dto/page-option-dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -44,19 +45,27 @@ export class UsersController {
   // }
 
   @Get('/getUsers')
-  @ApiBearerAuth()
   // @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: [UserDto] })
-  findAll(@Query() paginationDto: PaginationDto): Promise<UserDto[]> {
-    return this.usersService.findAll(paginationDto);
+  @HttpCode(200)
+  findAll(@Query() pageOptionsDto: PageOptionsDto): any {
+    return this.usersService.findAll(pageOptionsDto);
   }
 
-  @Get('/getUserKyc')
+  // @Get('/getUserKyc')
+  // @ApiBearerAuth()
+  // // @UseGuards(AuthGuard('jwt'))
+  // @ApiOkResponse({ type: UserDto })
+  // async getUser(): Promise<any> {
+  //   return this.usersService.getKycUser();
+  // }
+
+  @Get('/getuserKyc')
   @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
-  @ApiOkResponse({ type: UserDto })
-  async getUser(): Promise<any> {
-    return this.usersService.getKycUser();
+  @ApiOkResponse({ type: [UserDto] })
+  @HttpCode(200)
+  getUser(@Query() pageOptionsDto: PageOptionsDto) :any {
+    return this.usersService.getKycUser(pageOptionsDto)
   }
 
   // @Put('me')
