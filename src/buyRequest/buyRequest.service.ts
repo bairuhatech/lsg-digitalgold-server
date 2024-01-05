@@ -1,15 +1,17 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateBuyRequestDto } from './dto/create-buyRequest.dto';
 import { BuyRequest as BuyRequestEntity } from './buyRequest.entity';
-import { BuyRequestType } from 'src/shared/enum/request-type.enum';
+import { BuyRequestType } from '../shared/enum/request-type.enum';
 import { BuyRequestDto } from './dto/buyRequest.dto';
-import { PaginationDto } from 'src/shared/commondto/pagination.dto';
+import { PaginationDto } from '../shared/commondto/pagination.dto';
+import { PageOptionsDto } from '../shared/dto/page-option-dto';
+import { PageDto, PageMetaDto } from '../shared/dto';
 @Injectable()
 export class BuyRequestsServices {
   constructor(
     @Inject('BuyRequestRepository')
     private readonly buyRequestRepo: typeof BuyRequestEntity,
-  ) {}
+  ) { }
 
   async create(userId: string, createBuyRequestDto: CreateBuyRequestDto) {
     try {
@@ -27,19 +29,37 @@ export class BuyRequestsServices {
   }
   async findType(
     type: BuyRequestType,
-    paginationDto: PaginationDto,
-  ): Promise<any> {
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<BuyRequestDto>> {
     try {
-      const { page = 1, pageSize = 10 } = paginationDto;
-      const offset = (page - 1) * pageSize;
-      const metalRequests = await this.buyRequestRepo.findAll({
+      const skip = (pageOptionsDto.page - 1) * pageOptionsDto.take;
+      const buyRequests = await this.buyRequestRepo.findAndCountAll({
         where: { type: type },
-        offset,
-        limit: pageSize,
+        limit: Number(pageOptionsDto.take),
+        offset: skip,
+        order: [['updatedAt', pageOptionsDto.order]]
       });
-      return metalRequests;
+
+      const entities = buyRequests.rows.map((buyRequest) => new BuyRequestDto(buyRequest));
+      const itemCount = buyRequests.count;
+
+      const pageMetaDto = new PageMetaDto({ pageOptionsDto, itemCount });
+      return new PageDto(entities, pageMetaDto);
     } catch (err) {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+  async GetAllSellBuy(type: BuyRequestType): Promise<BuyRequestDto[]> {
+    try {
+      const buyRequests = await this.buyRequestRepo.findAll({
+        where: { type: type },
+      });
+      const entities = buyRequests.map((buyRequest) => new BuyRequestDto(buyRequest));
+      return entities;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  
+
 }

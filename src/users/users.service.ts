@@ -13,6 +13,7 @@ import { PageOptionsDto } from '../shared/dto/page-option-dto';
 import { KycService } from '../kyc/kyc.service';
 import { PageDto, PageMetaDto } from '../shared/dto';
 import { KycDto } from 'src/kyc/dto/kyc.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -190,4 +191,28 @@ export class UsersService {
 
     return sign(payload, this.jwtPrivateKey, {});
   }
+  
+
+  private async getkyc(id: string) {
+    const UserData = await this.usersRepository.findOne<User>({where : {id :id}});
+    if (!UserData) {
+      throw new HttpException('No kyc found', HttpStatus.NOT_FOUND);
+    }
+    return UserData;
+  }
+
+
+  async updateUser(id:string, updateUserDto: UpdateUserDto) {
+    try {
+      const UserUpdate = await this.getkyc(id);
+      UserUpdate.email = updateUserDto.email || UserUpdate.email;
+      UserUpdate.city = updateUserDto.city || UserUpdate.city;
+      return UserUpdate.save();
+
+    } catch (err) {
+      console.log("error to update",err)
+    }
+  }
+
+
 }

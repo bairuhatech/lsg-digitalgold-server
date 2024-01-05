@@ -11,16 +11,19 @@ import {
   Put,
   Query,
   ParseIntPipe,
+  Param,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
-import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../shared/commondto/pagination.dto';
 import { PageOptionsDto } from '../shared/dto/page-option-dto';
+import { User } from './user.entity';
+
 
 @Controller('users')
 @ApiTags('users')
@@ -78,6 +81,18 @@ export class UsersController {
   // ): Promise<UserDto> {
   //     return this.usersService.update(request.user.id, updateUserDto);
   // }
+
+  @Put(':id')
+  @ApiOkResponse({ type: User})
+  @ApiParam({ name: 'id', required: true })
+  update(
+    @Param('id') id: string,
+    @Body() UpdateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    return this.usersService.updateUser(id,UpdateUserDto)
+  }
+
+
 
   @Delete('me')
   @ApiBearerAuth()

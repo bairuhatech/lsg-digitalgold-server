@@ -6,25 +6,10 @@ export class UpdateUserDto {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    readonly name?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    readonly phoneNumber?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    readonly city?: Gender;
+    readonly city?: string;
 
     @ApiProperty()
     @IsOptional()
     @IsString()
     readonly email?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    readonly role?: number;
 }
