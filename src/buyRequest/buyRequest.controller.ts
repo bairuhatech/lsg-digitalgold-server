@@ -24,7 +24,7 @@ import { BuyRequestType } from '../shared/enum/request-type.enum';
 import { BuyRequestDto } from './dto/buyRequest.dto';
 import { PaginationDto } from '../shared/commondto/pagination.dto';
 import { PageOptionsDto } from '../shared/dto/page-option-dto';
-import { PageDto } from 'src/shared/dto';
+import { PageDto } from '../shared/dto';
 
 @Controller('buyRequest')
 @ApiTags('buyRequest')

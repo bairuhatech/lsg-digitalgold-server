@@ -12,7 +12,7 @@ import { Kyc } from '../kyc/kyc.entity';
 import { PageOptionsDto } from '../shared/dto/page-option-dto';
 import { KycService } from '../kyc/kyc.service';
 import { PageDto, PageMetaDto } from '../shared/dto';
-import { KycDto } from 'src/kyc/dto/kyc.dto';
+import { KycDto } from '../kyc/dto/kyc.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
